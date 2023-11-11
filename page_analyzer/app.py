@@ -55,7 +55,7 @@ def add_url():
 
 
 @app.get('/urls')
-def get_all_urls():
+def get_urls():
     all_urls = get_all_urls()
     return render_template('urls.html', urls=all_urls)
 
@@ -65,3 +65,4 @@ def get_one_url(id):
     url = get_url_by_id(id)
     messages = get_flashed_messages(with_categories=True)
     return render_template('url.html', url=url, messages=messages)
+    
