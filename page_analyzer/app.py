@@ -65,4 +65,3 @@ def get_one_url(id):
     url = get_url_by_id(id)
     messages = get_flashed_messages(with_categories=True)
     return render_template('url.html', url=url, messages=messages)
-    
