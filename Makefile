@@ -1,6 +1,15 @@
 install:
 	poetry install
 
+build:
+	./build.sh
+
+publish:
+	poetry publish --dry-run
+
+package-install:
+	python3 -m pip install --user dist/*.whl --force-reinstall
+
 lint:
 	poetry run flake8 page_analyzer
 
@@ -10,6 +19,3 @@ dev:
 PORT ?= 8000
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
-
-build:
-	poetry install && psql -a -d $DATABASE_URL -f database.sql
