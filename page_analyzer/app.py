@@ -17,6 +17,7 @@ from page_analyzer.database import (
     get_all_urls
 )
 
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
