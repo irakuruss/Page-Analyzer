@@ -12,7 +12,5 @@ start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 DATABASE_URL ?= postgres://page_analyzer_gncp_user:pNw56Lmv4950rmg5YVTP77YShLQuCJv1@dpg-cl7uht2uuipc73ellmig-a.oregon-postgres.render.com/page_analyzer_gncp
-database:
-	psql -a -d $DATABASE_URL -f database.sql
 build:
-	install database
+	make install && psql -a -d $DATABASE_URL -f database.sql
