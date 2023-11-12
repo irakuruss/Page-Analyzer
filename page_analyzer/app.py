@@ -8,6 +8,7 @@ from flask import (
     get_flashed_messages,
 )
 import os
+from dotenv import load_dotenv
 from datetime import datetime
 from page_analyzer.validator import validate
 from page_analyzer.database import (
@@ -16,6 +17,7 @@ from page_analyzer.database import (
     get_url_by_id,
     get_all_urls
 )
+
 
 load_dotenv()
 
