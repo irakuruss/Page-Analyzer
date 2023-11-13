@@ -17,6 +17,7 @@
                       <td>{{ url[0] }}</td>
                       <td><a href="{{ url_for('get_one_url', id=url[0]) }}">{{ url[1] }}</a></td>
                       <td></td>
+                      <td>{{ checks[url[1]] }}</td>
                       <td></td>
                   </tr>
                   {% endfor %}
