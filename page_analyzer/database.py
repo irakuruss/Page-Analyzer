@@ -42,7 +42,8 @@ def get_all_urls():
 def add_url_check_to_db(check):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO url_checks (url_id, status_code, created_at)'
+        cursor.execute('INSERT INTO url_checks'
+                       '(url_id, status_code, created_at)'
                        'VALUES (%s, %s, %s)',
                        (check['url_id'],
                         check['status_code'],
@@ -61,6 +62,17 @@ def get_url_checks_by_id(id):
 def get_last_url_check():
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
-        cursor.execute('SELECT                          urls.id,                          url_checks.id,                          urls.name,                          url_checks.status_code,                          url_checks.created_at                        FROM urls                        LEFT JOIN url_checks ON urls.id = url_id                        AND url_checks.created_at = (SELECT MAX(created_at)                                             FROM url_checks                                             WHERE url_id = urls.id)                        ORDER BY url_checks.created_at DESC')
+        cursor.execute('SELECT'
+                       'urls.id,'
+                       'url_checks.id,'
+                       'urls.name,'
+                       'url_checks.status_code,'
+                       'url_checks.created_at'
+                       'FROM urls'
+                       'LEFT JOIN url_checks ON urls.id = url_id'
+                       'AND url_checks.created_at = (SELECT MAX(created_at)'
+                       'FROM url_checks'
+                       'WHERE url_id = urls.id)'
+                       'ORDER BY url_checks.created_at DESC')
         url_check = cursor.fetchall()
     return url_check

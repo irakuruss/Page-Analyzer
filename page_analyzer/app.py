@@ -85,9 +85,9 @@ def add_check(id):
         r = requests.get(url, verify=False)
         code = r.status_code
         check = {'url_id': id,
-                        'status_code': code,
-                        'created_at': datetime.now().strftime('%Y-%m-%d')
-                        }
+                 'status_code': code,
+                 'created_at': datetime.now().strftime('%Y-%m-%d')
+                 }
         add_url_check_to_db(check)
     except requests.ConnectionError:
         flash('Произошла ошибка при проверке', 'alert-danger')
