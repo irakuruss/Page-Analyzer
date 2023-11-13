@@ -10,6 +10,7 @@ from flask import (
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+import requests
 from page_analyzer.validator import validate
 from page_analyzer.database import (
     add_url_to_db,
@@ -61,12 +62,8 @@ def add_url():
 
 @app.get('/urls')
 def get_urls():
-    checks = {}
     all_urls = get_all_urls()
-    for url in all_urls:
-        date = get_last_url_check(url[0])[0]
-        if date is not None:
-            checks[url[1]] = date
+    checks = get_last_url_check()
     return render_template('urls.html', urls=all_urls, checks=checks)
 
 
@@ -83,8 +80,15 @@ def get_one_url(id):
 
 @app.post('/urls/<id>/checks')
 def add_check(id):
-    check = {'url_id': id,
-             'created_at': datetime.now().strftime('%Y-%m-%d')
-             }
-    add_url_check_to_db(check)
+    url = get_url_by_id(id)[1]
+    try:
+        r = requests.get(url, verify=False)
+        code = r.status_code
+        check = {'url_id': id,
+                        'status_code': code,
+                        'created_at': datetime.now().strftime('%Y-%m-%d')
+                        }
+        add_url_check_to_db(check)
+    except requests.ConnectionError:
+        flash('Произошла ошибка при проверке', 'alert-danger')
     return redirect(url_for('get_one_url', id=id))

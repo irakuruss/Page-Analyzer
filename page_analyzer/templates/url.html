@@ -42,13 +42,16 @@
                       <th>Дата создания</th>
                   </tr>
                   {% for check in checks %}
-                  <tr><th>{{ check[1] }}</th>
-                      <th></th>
+                      {%  if check[0] != None and check[1] == url[0] %}
+                  <tr>
+                      <th>{{ check[0] }}</th>
+                      <th>{{ check[2] }}</th>
                       <th></th>
                       <th></th>
                       <th></th>
                       <th>{{ check[6] }}</th>
                   </tr>
+                      {% endif %}
                   {% endfor %}
                   </tbody>
               </table>
