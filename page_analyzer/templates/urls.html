@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-  <main class="flex-grow-1">
+<main class="flex-grow-1">
       <div class="container-lg mt-3">
           <h1>Сайты</h1>
           <div class="table-responsive">
@@ -13,17 +13,21 @@
                       <td>Код ответа</td>
                   </tr>
                   {% for url in urls %}
+                      {% for check in checks %}
+                          {% if check[0] == url[0] %}
                   <tr>
                       <td>{{ url[0] }}</td>
                       <td><a href="{{ url_for('get_one_url', id=url[0]) }}">{{ url[1] }}</a></td>
-                      <td></td>
-                      <td>{{ checks[url[1]] }}</td>
-                      <td></td>
+                      <td>{{ check[4] }}</td>
+                      <td>{{ check[3] }}</td>
                   </tr>
+                          {% endif %}
+                      {% endfor %}
                   {% endfor %}
                   </tbody>
               </table>
           </div>
+
       </div>
-  </main>
+</main>
 {% endblock %}
