@@ -13,13 +13,13 @@
                       <td>Код ответа</td>
                   </tr>
                   {% for url in urls %}
-                      {% for check in checks %}
-                          {% if check[0] == url[0] %}
+                      {% for check in last_check %}
+                          {% if check.id == url.id %}
                   <tr>
-                      <td>{{ url[0] }}</td>
-                      <td><a href="{{ url_for('get_one_url', id=url[0]) }}">{{ url[1] }}</a></td>
-                      <td>{{ check[4] }}</td>
-                      <td>{{ check[3] }}</td>
+                      <td>{{ url.id }}</td>
+                      <td><a href="{{ url_for('get_one_url', id=url.id) }}">{{ url.name }}</a></td>
+                      <td>{{ check.created_at if check.created_at is not none }}</td>
+                      <td>{{ check.status_code if check.status_code is not none  }}</td>
                   </tr>
                           {% endif %}
                       {% endfor %}
@@ -29,5 +29,6 @@
           </div>
 
       </div>
+
 </main>
 {% endblock %}
