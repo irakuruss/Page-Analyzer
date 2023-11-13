@@ -29,7 +29,7 @@ def validate(url):  # noqa: C901
     return errors
 
 
-def get_check_url(id, url):
+def get_url_check(id, url):
     r = requests.get(url)
     code = r.status_code
     html_file = r.text
