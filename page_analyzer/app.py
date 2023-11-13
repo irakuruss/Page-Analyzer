@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 import requests
-from page_analyzer.validator import validate
+from page_analyzer.validator import validate, get_url_check
 from page_analyzer.database import (
     add_url_to_db,
     get_url_by_name,
@@ -56,15 +56,16 @@ def add_url():
     else:
         add_url_to_db(url_fields_dct)
         flash('Адрес добавлен', 'alert-success')
-        id = get_url_by_name(url_fields_dct['url'])[0]
+        url_record = get_url_by_name(url_fields_dct['url'])
+        id = url_record['name']
         return redirect(url_for('get_one_url', id=id))
 
 
 @app.get('/urls')
 def get_urls():
     all_urls = get_all_urls()
-    checks = get_last_url_check()
-    return render_template('urls.html', urls=all_urls, checks=checks)
+    last_check = get_last_url_check()
+    return render_template('urls.html', urls=all_urls, last_check=last_check)
 
 
 @app.get('/urls/<id>')
@@ -80,15 +81,15 @@ def get_one_url(id):
 
 @app.post('/urls/<id>/checks')
 def add_check(id):
-    url = get_url_by_id(id)[1]
+    url_record = get_url_by_id(id)
+    url = url_record['name']
     try:
-        r = requests.get(url, verify=False)
-        code = r.status_code
-        check = {'url_id': id,
-                 'status_code': code,
-                 'created_at': datetime.now().strftime('%Y-%m-%d')
-                 }
-        add_url_check_to_db(check)
-    except requests.ConnectionError:
+        check = get_url_check(id, url)
+        if check['status_code'] == 200:
+            add_url_check_to_db(check)
+            flash('Страница успешно проверена', 'alert-success')
+        else:
+            flash('Произошла ошибка при проверке', 'alert-danger')
+    except requests.RequestException:
         flash('Произошла ошибка при проверке', 'alert-danger')
     return redirect(url_for('get_one_url', id=id))

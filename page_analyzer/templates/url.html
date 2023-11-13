@@ -7,21 +7,21 @@
   {% endif %}
 <main class="flex-grow-1">
       <div class="container-lg mt-3">
-          <h1>{{ url[1] }}</h1>
+          <h1>{{ url.name }}</h1>
           <div class="table-responsive">
               <table class="table table-bordered table-hover table-nowrap" data-test="url">
                   <tbody>
                   <tr>
                       <td>ID</td>
-                      <td>{{ url[0] }}</td>
+                      <td>{{ url.id }}</td>
                   </tr>
                   <tr>
                       <td>Имя</td>
-                      <td>{{ url[1] }}</td>
+                      <td>{{ url.name }}</td>
                   </tr>
                   <tr>
                       <td>Дата создания</td>
-                      <td>{{ url[2] }}</td>
+                      <td>{{ url.created_at }}</td>
                   </tr>
                   </tbody>
               </table>
@@ -34,25 +34,23 @@
               <table class="table table-bordered table-hover mt-2" data-test="checks">
                   <tbody>
                   <tr>
-                      <th>ID</th>
-                      <th>Код ответа</th>
-                      <th>h1</th>
-                      <th>title</th>
-                      <th>description</th>
-                      <th>Дата создания</th>
-                  </tr>
-                  {% for check in checks %}
-                      {%  if check[0] != None and check[1] == url[0] %}
-                  <tr>
-                      <th>{{ check[0] }}</th>
-                      <th>{{ check[2] }}</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th>{{ check[6] }}</th>
-                  </tr>
-                      {% endif %}
-                  {% endfor %}
+                          <th>ID</th>
+                          <th>Код ответа</th>
+                          <th>h1</th>
+                          <th>title</th>
+                          <th>description</th>
+                          <th>Дата создания</th>
+                      </tr>
+                      {% for check in checks %}
+                      <tr>
+                          <td>{{ check.id }}</td>
+                          <td>{{ check.status_code }}</td>
+                          <td>{{ check.h1 }}</td>
+                          <td>{{ check.title }}</td>
+                          <td>{{ check.description }}</td>
+                          <td>{{ check.created_at }}</td>
+                      </tr>
+                      {% endfor %}
                   </tbody>
               </table>
           </div>
