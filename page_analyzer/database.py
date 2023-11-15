@@ -11,9 +11,18 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 def add_url_to_db(url):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
-                       (url['url'], url['created_at']))
-        conn.commit()
+        try:
+            cursor.execute('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
+                           (url['url'], url['created_at']))
+            conn.commit()
+            is_added = True
+        except psycopg2.Error:
+            conn.rollback()
+            is_added = False
+        cursor.execute('SELECT id FROM urls WHERE name = (%s)',
+                       [url['url']])
+        id = cursor.fetchone()[0]
+        return is_added, id
 
 
 def get_url_by_name(name):

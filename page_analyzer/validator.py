@@ -1,32 +1,36 @@
-from page_analyzer.database import get_all_urls
+# from page_analyzer.database import get_all_urls
 import validators
 from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from flask import flash, get_flashed_messages
 
 
-def validate(url):  # noqa: C901
-    errors = {}
-    all_orders = get_all_urls()
-    existed_sites = []
-    for order in all_orders:
-        existed_sites.append(order[1])
-    parsed_name = urlparse(url['url'])
-    normalize_name = '{0}://{1}'.format(
-        parsed_name.scheme,
-        parsed_name.netloc
-    )
-    if normalize_name != '://':
-        url['url'] = normalize_name
-    for elem in existed_sites:
-        if elem.startswith(url['url']):
-            errors['name'] = 'Страница уже существует'
-    if not validators.url(url['url']):
-        errors['name'] = 'Некорректный URL'
-        if not url['url']:
-            errors['name1'] = 'URL обязателен'
-    return errors
+def normalize_url(url):
+    parse_url = urlparse(url)
+    return f'{parse_url.scheme}://{parse_url.netloc}'
+
+
+def get_valid_length(data):
+    if data:
+        if len(data) > 255:
+            data = data[:252] + '...'
+    return data
+
+
+def get_valid_url(url):
+    return validators.url(url) is True
+
+
+def get_validation_errors(url):
+    if not validators.url(url):
+        flash('Некорректный URL', 'danger')
+        if not url:
+            flash('URL обязателен', 'danger')
+    if len(url) > 255:
+        flash('URL превышает 255 символов', 'danger')
+    return get_flashed_messages(with_categories=True)
 
 
 def get_url_check(id, url):
