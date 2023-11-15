@@ -12,7 +12,8 @@ def add_url_to_db(url):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
         try:
-            cursor.execute('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
+            cursor.execute('INSERT INTO urls (name, created_at) '
+                           'VALUES (%s, %s)',
                            (url['url'], url['created_at']))
             conn.commit()
             is_added = True
@@ -23,14 +24,6 @@ def add_url_to_db(url):
                        [url['url']])
         id = cursor.fetchone()[0]
         return is_added, id
-
-
-def get_url_by_name(name):
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls WHERE name = (%s)', [name])
-        url = cursor.fetchone()
-    return url
 
 
 def get_url_by_id(id):

@@ -2,7 +2,7 @@
 {% block content %}
   {% if errors %}
       {% for category, error in errors %}
-          <div class="alert {{ category }}" role="alert">{{ error }}</div>
+          <div class="alert-{{ category }}" role="alert">{{ error }}</div>
       {% endfor %}
   {% endif %}
   <main class="flex-grow-1">

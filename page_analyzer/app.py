@@ -11,7 +11,10 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 import requests
-from page_analyzer.validator import get_validation_errors, get_url_check, normalize_url
+from page_analyzer.validator import (
+    get_validation_errors,
+    get_url_check,
+    normalize_url)
 from page_analyzer.database import (
     add_url_to_db,
     get_url_by_id,
