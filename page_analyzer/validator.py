@@ -15,8 +15,9 @@ def normalize_url(url):
 
 
 def get_valid_length(data):
-    if len(data) > MAX_LENGTH:
-        data = data[:252] + '...'
+    if data:
+        if len(data) > MAX_LENGTH:
+            data = data[:252] + '...'
     return data
 
 
