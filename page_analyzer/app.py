@@ -46,7 +46,7 @@ def urls_page():
             errors=errors
         ), 422
     url['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    url['url'] = normalize_url(url)
+    url['url'] = normalize_url(url['url'])
     is_added, id = add_url_to_db(url)
     if is_added:
         flash('Страница успешно добавлена', 'success')

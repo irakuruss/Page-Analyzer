@@ -52,14 +52,14 @@ def get_all_urls():
 def add_url_check_to_db(check):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO url_checks'
-                       '(url_id,'
-                       'status_code,'
-                       'h1,'
-                       'title,'
-                       'description,'
-                       'created_at)'
-                       'VALUES (%s, %s, %s, %s, %s, %s)',
+        cursor.execute('INSERT INTO url_checks '
+                       '(url_id, '
+                       'status_code, '
+                       'h1, '
+                       'title, '
+                       'description, '
+                       'created_at) '
+                       'VALUES (%s, %s, %s, %s, %s, %s) ',
                        (check['url_id'],
                         check['status_code'],
                         check['h1'],
@@ -80,16 +80,16 @@ def get_url_checks_by_id(id):
 def get_last_url_check():
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT'
-                       'urls.id,'
-                       'urls.name,'
-                       'url_checks.status_code,'
-                       'url_checks.created_at'
-                       'FROM urls'
-                       'LEFT JOIN url_checks ON urls.id = url_id'
-                       'AND url_checks.id = (SELECT MAX(url_checks.id)'
-                       'FROM url_checks'
-                       'WHERE url_id = urls.id)'
+        cursor.execute('SELECT '
+                       'urls.id, '
+                       'urls.name, '
+                       'url_checks.status_code, '
+                       'url_checks.created_at '
+                       'FROM urls '
+                       'LEFT JOIN url_checks ON urls.id = url_id '
+                       'AND url_checks.id = (SELECT MAX(url_checks.id) '
+                       'FROM url_checks '
+                       'WHERE url_id = urls.id) '
                        'ORDER BY url_checks.created_at DESC')
         url_check = cursor.fetchall()
     return url_check
