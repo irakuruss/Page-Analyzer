@@ -21,10 +21,11 @@ def get_valid_length(data):
 
 
 def get_validation_errors(url):
-    if not url:
-        flash('URL обязателен', 'danger')
     if not validators.url(url):
-        flash('Некорректный URL', 'danger')
+        if not url:
+            flash('URL обязателен', 'danger')
+        else:
+            flash('Некорректный URL', 'danger')
     if len(url) > MAX_LENGTH:
         flash(f'URL превышает {MAX_LENGTH} символов', 'danger')
     return get_flashed_messages(with_categories=True)
