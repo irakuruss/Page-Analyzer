@@ -15,9 +15,8 @@ def normalize_url(url):
 
 
 def get_valid_length(data):
-    if data:
-        if len(data) > MAX_LENGTH:
-            data = data[:252] + '...'
+    if len(data) > MAX_LENGTH:
+        data = data[:MAX_LENGTH-3] + '...'
     return data
 
 
@@ -33,14 +32,13 @@ def get_validation_errors(url):
 
 def get_parse_data(data):
     soup = BeautifulSoup(data.text, 'html.parser')
-    h1, title, description = None, None, None
+    h1, title, description = '', '', ''
     if soup.h1:
         h1 = soup.h1.string
     if soup.title:
         title = soup.title.string
     if soup.find(attrs={'name': 'description'}):
-        find_description = soup.find(attrs={'name': 'description'})
-        description = find_description['content']
+        description = soup.find(attrs={'name': 'description'})['content']
     return h1, title, description
 
 
