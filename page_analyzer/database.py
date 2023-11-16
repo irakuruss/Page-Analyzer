@@ -23,7 +23,7 @@ def add_url_to_db(url):
         cursor.execute('SELECT id FROM urls WHERE name = (%s)',
                        [url['url']])
         id = cursor.fetchone()[0]
-        return is_added, id
+    return is_added, id
 
 
 def get_url_by_id(id):
