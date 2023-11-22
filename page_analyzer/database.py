@@ -13,33 +13,17 @@ def add_url_to_db(url):
     with conn.cursor() as cursor:
         try:
             cursor.execute('INSERT INTO urls (name, created_at) '
-                           'VALUES (%s, %s)',
+                           'VALUES (%s, %s);',
                            (url['url'], url['created_at']))
             conn.commit()
             is_added = True
         except psycopg2.Error:
             conn.rollback()
             is_added = False
-        cursor.execute('SELECT id FROM urls WHERE name = (%s)',
+        cursor.execute('SELECT id FROM urls WHERE name = (%s);',
                        [url['url']])
         id = cursor.fetchone()[0]
     return is_added, id
-
-
-def get_url_by_id(id):
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls WHERE id = (%s)', [id])
-        url = cursor.fetchone()
-    return url
-
-
-def get_all_urls():
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls')
-        all_urls = cursor.fetchall()
-    return all_urls
 
 
 def add_url_check_to_db(check):
@@ -52,7 +36,7 @@ def add_url_check_to_db(check):
                        'title, '
                        'description, '
                        'created_at) '
-                       'VALUES (%s, %s, %s, %s, %s, %s) ',
+                       'VALUES (%s, %s, %s, %s, %s, %s);',
                        (check['url_id'],
                         check['status_code'],
                         check['h1'],
@@ -62,10 +46,33 @@ def add_url_check_to_db(check):
         conn.commit()
 
 
+def get_url_by_id(id):
+    conn = psycopg2.connect(DATABASE_URL)
+    with conn.cursor(cursor_factory=DictCursor) as cursor:
+        cursor.execute('SELECT * FROM urls WHERE id = (%s)'
+                       'ORDER BY created_at DESC;', [id])
+        url = cursor.fetchone()
+    return url
+
+
+def get_all_urls():
+    conn = psycopg2.connect(DATABASE_URL)
+    with conn.cursor(cursor_factory=DictCursor) as cursor:
+        cursor.execute('SELECT MAX(url_checks.created_at) AS created_at, '
+                       'urls.id, urls.name, url_checks.status_code '
+                       'FROM urls LEFT JOIN url_checks '
+                       'ON urls.id = url_checks.url_id '
+                       'GROUP BY urls.id, url_checks.status_code '
+                       'ORDER BY urls.id DESC;')
+        all_urls = cursor.fetchall()
+    return all_urls
+
+
 def get_url_checks_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM url_checks WHERE url_id = (%s)', [id])
+        cursor.execute('SELECT * FROM url_checks WHERE url_id = (%s)'
+                       'ORDER BY created_at DESC;', [id])
         url_checks = cursor.fetchall()
     return url_checks
 

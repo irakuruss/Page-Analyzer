@@ -21,7 +21,6 @@ from page_analyzer.database import (
     get_all_urls,
     add_url_check_to_db,
     get_url_checks_by_id,
-    get_last_url_check,
 )
 
 
@@ -39,8 +38,7 @@ def index():
 def urls_page():
     if request.method == 'GET':
         urls = get_all_urls()
-        last_check = get_last_url_check()
-        return render_template('urls.html', urls=urls, last_check=last_check)
+        return render_template('urls.html', urls=urls)
     url = request.form.to_dict()
     errors = get_validation_errors(url['url'])
     if errors:
