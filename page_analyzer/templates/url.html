@@ -9,7 +9,7 @@
     {% endif %}
 <main class="flex-grow-1">
       <div class="container-lg mt-3">
-          <h1>{{ url.name }}</h1>
+          <h1>Сайт: {{ url.name }}</h1>
           <div class="table-responsive">
               <table class="table table-bordered table-hover table-nowrap" data-test="url">
                   <tbody>
@@ -29,7 +29,7 @@
               </table>
           </div>
           <h2 class="mt-5 mb-3">Проверки</h2>
-          <form method="post" action="/urls/{{ url[0] }}/checks">
+          <form method="post" action="{{ url_for('add_check', id=url.id) }}">
               <input type="submit" class="btn btn-primary" value="Запустить проверку">
           </form>
           <div>
