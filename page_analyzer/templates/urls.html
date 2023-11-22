@@ -4,7 +4,7 @@
       <div class="container-lg mt-3">
           <h1>Сайты</h1>
           <div class="table-responsive">
-              <table class="table table-bordered table-hover table-nowrap" data-test="url">
+              <table class="table table-bordered table-hover table-nowrap" data-test="urls">
                   <tbody>
                   <tr>
                       <td>ID</td>
@@ -12,23 +12,19 @@
                       <td>Последняя проверка</td>
                       <td>Код ответа</td>
                   </tr>
-                  {% for url in urls %}
-                      {% for check in last_check %}
-                          {% if check.id == url.id %}
-                  <tr>
-                      <td>{{ url.id }}</td>
-                      <td><a href="{{ url_for('url_page', id=url.id) }}">{{ url.name }}</a></td>
-                      <td>{{ check.created_at if check.created_at is not none }}</td>
-                      <td>{{ check.status_code if check.status_code is not none  }}</td>
-                  </tr>
-                          {% endif %}
+                  {% if urls %}
+                      {% for url in urls %}
+                      <tr>
+                          <td>{{ url.id }}</td>
+                          <td><a href="{{ url_for('url_page', id=url.id) }}">{{ url.name }}</a></td>
+                          <td>{% if url.created_at %}{{ url.created_at.strftime('%Y-%m-%d') }}{% endif %}</td>
+                          <td>{% if url.status_code %}{{ url.status_code }}{% endif %}</td>
+                      </tr>
                       {% endfor %}
-                  {% endfor %}
+                  {% endif %}
                   </tbody>
               </table>
           </div>
-
       </div>
-
 </main>
 {% endblock %}
