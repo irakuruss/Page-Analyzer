@@ -49,8 +49,7 @@ def add_url_check_to_db(check):
 def get_url_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls WHERE id = (%s)'
-                       'ORDER BY created_at DESC;', [id])
+        cursor.execute('SELECT * FROM urls WHERE id = (%s);', [id])
         url = cursor.fetchone()
     return url
 
