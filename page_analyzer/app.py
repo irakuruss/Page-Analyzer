@@ -21,6 +21,7 @@ from page_analyzer.database import (
     get_all_urls,
     add_url_check_to_db,
     get_url_checks_by_id,
+    get_url_by_name
 )
 
 
@@ -48,11 +49,13 @@ def urls_page():
         ), 422
     url['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     url['url'] = normalize_url(url['url'])
-    is_added, id = add_url_to_db(url)
-    if is_added:
-        flash('Страница успешно добавлена', 'success')
-    else:
+    id = get_url_by_name(url['url'])
+    if id:
         flash('Страница уже существует', 'info')
+        return redirect(url_for('url_page', id=id))
+    add_url_to_db(url)
+    id = get_url_by_name(url['url'])
+    flash('Страница успешно добавлена', 'success')
     return redirect(url_for('url_page', id=id))
 
 
@@ -76,7 +79,7 @@ def add_check(id):
             add_url_check_to_db(check)
             flash('Страница успешно проверена', 'success')
         else:
-            flash('Произошла ошибка при проверке', 'error')
+            flash('Произошла ошибка при проверке', 'danger')
     except requests.RequestException:
-        flash('Произошла ошибка при проверке', 'error')
+        flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('url_page', id=id))
