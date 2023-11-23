@@ -54,7 +54,7 @@ def get_url_by_name(name):
         try:
             cursor.execute('SELECT id FROM urls WHERE name = (%s)', [name])
             return cursor.fetchone()[0]
-        except:
+        except psycopg2.Error:
             return
 
 
