@@ -27,7 +27,7 @@ def get_validation_errors(url):
             flash('URL обязателен', 'danger')
         else:
             flash('Некорректный URL', 'danger')
-    if len(url) > MAX_LENGTH:
+    elif len(url) > MAX_LENGTH:
         flash(f'URL превышает {MAX_LENGTH} символов', 'danger')
     return get_flashed_messages(with_categories=True)
 

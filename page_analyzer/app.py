@@ -47,12 +47,12 @@ def urls_page():
             'index.html',
             errors=errors
         ), 422
-    url['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     url['url'] = normalize_url(url['url'])
     id = get_url_by_name(url['url'])
     if id:
         flash('Страница уже существует', 'info')
         return redirect(url_for('url_page', id=id))
+    url['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     add_url_to_db(url)
     id = get_url_by_name(url['url'])
     flash('Страница успешно добавлена', 'success')
@@ -66,7 +66,8 @@ def url_page(id):
     messages = get_flashed_messages(with_categories=True)
     return render_template('url.html',
                            url=url,
-                           messages=messages, checks=checks
+                           messages=messages,
+                           checks=checks
                            )
 
 
@@ -87,13 +88,9 @@ def add_check(id):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template(
-        'page_not_found.html'
-    ), 404
+    return render_template('page_not_found.html'), 404
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
-    return render_template(
-        'internal_server_error.html'
-    ), 500
+    return render_template('internal_server_error.html'), 500

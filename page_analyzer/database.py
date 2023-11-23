@@ -43,7 +43,9 @@ def add_url_check_to_db(check):
 def get_url_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls WHERE id = (%s);', [id])
+        cursor.execute('SELECT * FROM urls '
+                       'WHERE id = (%s);',
+                       [id])
         url = cursor.fetchone()
     return url
 
@@ -52,7 +54,9 @@ def get_url_by_name(name):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
         try:
-            cursor.execute('SELECT id FROM urls WHERE name = (%s)', [name])
+            cursor.execute('SELECT id FROM urls '
+                           'WHERE name = (%s)',
+                           [name])
             return cursor.fetchone()[0]
         except Exception:
             return
@@ -74,25 +78,9 @@ def get_all_urls():
 def get_url_checks_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM url_checks WHERE url_id = (%s)'
-                       'ORDER BY id DESC;', [id])
+        cursor.execute('SELECT * FROM url_checks '
+                       'WHERE url_id = (%s)'
+                       'ORDER BY id DESC;',
+                       [id])
         url_checks = cursor.fetchall()
     return url_checks
-
-
-def get_last_url_check():
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT '
-                       'urls.id, '
-                       'urls.name, '
-                       'url_checks.status_code, '
-                       'url_checks.created_at '
-                       'FROM urls '
-                       'LEFT JOIN url_checks ON urls.id = url_id '
-                       'AND url_checks.id = (SELECT MAX(url_checks.id) '
-                       'FROM url_checks '
-                       'WHERE url_id = urls.id) '
-                       'ORDER BY url_checks.created_at DESC')
-        url_check = cursor.fetchall()
-    return url_check
