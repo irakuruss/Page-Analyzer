@@ -26,31 +26,31 @@ Build with:
 ___
 ### Installation
 You must have Python 3.8 and newer, Poetry and PostgreSQL installed to work properly
-1. Clone project
+1. Clone project:
 ```
 git@github.com:irakuruss/python-project-83.git
 ```
-2. Database creation
+2. Database creation:
 ```
 sudo -u postgres createuser --createdb {username} 
 createdb {databasename}
 ```
-3. Secret keys
+3. Secret keys.
 The site requires two environment variables: SECRET_KEY - Flask app secret key, DATABASE_URL - database connection url. These can be defined using the .env file:
 ```
 DATABASE_URL='postgresql://{username}:{password}@{host}:{port}/{databasename}'
 SECRET_KEY='{your secret key}'
 ```
-4. Installing dependencies and customizing the database
+4. Installing dependencies and customizing the database:
 ```
 export DATABASE_URL='postgresql://{username}:{password}@{host}:{port}/{databasename}'
 make build
 ```
-5. Running a dev server
+5. Running a dev server:
 ```
 make dev
 ```
-6. Starting production server
+6. Starting production server:
 ```
 make start
 ```
