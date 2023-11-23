@@ -75,7 +75,7 @@ def get_url_checks_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
         cursor.execute('SELECT * FROM url_checks WHERE url_id = (%s)'
-                       'ORDER BY created_at DESC;', [id])
+                       'ORDER BY id DESC;', [id])
         url_checks = cursor.fetchall()
     return url_checks
 
