@@ -18,7 +18,6 @@ def add_url_to_db(url):
             conn.commit()
             is_added = True
         except psycopg2.Error:
-            conn.rollback()
             is_added = False
         cursor.execute('SELECT id FROM urls WHERE name = (%s);',
                        [url['url']])
