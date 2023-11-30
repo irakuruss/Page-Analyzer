@@ -70,13 +70,7 @@ def get_all_urls():
                        'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
         for url in all_urls:
-            cursor.execute('SELECT MAX(created_at) AS created_at, '
-                           'status_code '
-                           'FROM url_checks '
-                           'WHERE url_id = (%s) '
-                           'GROUP BY url_id;',
-                           [url.id])
-            check = cursor.fetchall()
+            check = get_url_checks_by_id(url.id)[0]
             url['created_at'] = check['created_at']
             url['status_code'] = check['status_code']
     return all_urls
