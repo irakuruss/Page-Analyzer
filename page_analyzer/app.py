@@ -13,8 +13,8 @@ from dotenv import load_dotenv
 import requests
 from page_analyzer.validator import (
     get_validation_errors,
-    get_url_check,
     normalize_url)
+from url_check import get_url_check
 from page_analyzer.database import (
     add_url_to_db,
     get_url_by_id,
