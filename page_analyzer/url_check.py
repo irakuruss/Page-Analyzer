@@ -1,6 +1,6 @@
 import requests
-from parser import get_parse_data
-from validator import get_valid_length
+from page_analyzer.parser import get_parse_data
+from page_analyzer.validator import get_valid_length
 from datetime import datetime
 
 
