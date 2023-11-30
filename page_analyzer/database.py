@@ -65,13 +65,20 @@ def get_url_by_name(name):
 def get_all_urls():
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT MAX(url_checks.created_at) AS created_at, '
-                       'urls.id, urls.name, url_checks.status_code '
-                       'FROM urls LEFT JOIN url_checks '
-                       'ON urls.id = url_checks.url_id '
-                       'GROUP BY urls.id, url_checks.status_code '
-                       'ORDER BY urls.id DESC;')
+        cursor.execute('SELECT id, name '
+                       'FROM urls '
+                       'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
+        for url in all_urls:
+            cursor.execute('SELECT MAX(created_at) AS created_at, '
+                           'status_code '
+                           'FROM url_checks '
+                           'WHERE url_id = (%s) '
+                           'GROUP BY url_id;',
+                           [url.id])
+            check = cursor.fetchall()
+            url['created_at'] = check['created_at']
+            url['status_code'] = check['status_code']
     return all_urls
 
 
