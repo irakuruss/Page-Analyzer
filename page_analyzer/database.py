@@ -70,7 +70,7 @@ def get_all_urls():
                        'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
         for url in all_urls:
-            last_check = get_last_check(url[id])
+            last_check = get_last_check(url['id'])
             url['created_at'] = last_check['created_at']
             url['status_code'] = last_check['status_code']
     return all_urls
@@ -91,7 +91,7 @@ def get_last_check(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
         cursor.execute('SELECT created_at, status_code '
-                       'FROM url_checks'
+                       'FROM url_checks '
                        'WHERE url_id = (%s) '
                        'ORDER BY id DESC '
                        'LIMIT 1;',
