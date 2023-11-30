@@ -70,7 +70,7 @@ def get_all_urls():
                        'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
         for url in all_urls:
-            check = get_url_checks_by_id(url.id)[0]
+            check = get_url_checks_by_id(url[id])[0]
             url['created_at'] = check['created_at']
             url['status_code'] = check['status_code']
     return all_urls
