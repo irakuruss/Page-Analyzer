@@ -69,11 +69,17 @@ def get_all_urls():
                        'FROM urls '
                        'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
+        data = []
         for url in all_urls:
+            temp = {}
             last_check = get_last_check(url['id'])
-            url['created_at'] = last_check['created_at']
-            url['status_code'] = last_check['status_code']
-    return all_urls
+            temp['id'] = url['id']
+            temp['name'] = url['name']
+            temp['created_at'] = last_check['created_at']
+            temp['status_code'] = last_check['status_code']
+            data.append(temp)
+
+    return data
 
 
 def get_url_checks_by_id(id):
