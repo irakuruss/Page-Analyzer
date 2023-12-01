@@ -65,42 +65,22 @@ def get_url_by_name(name):
 def get_all_urls():
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT id, name '
-                       'FROM urls '
-                       'ORDER BY id DESC;')
+        cursor.execute('SELECT MAX(url_checks.created_at) AS created_at, '
+                       'urls.id, urls.name, url_checks.status_code '
+                       'FROM urls LEFT JOIN url_checks '
+                       'ON urls.id = url_checks.url_id '
+                       'GROUP BY urls.id, url_checks.status_code '
+                       'ORDER BY urls.id DESC;')
         all_urls = cursor.fetchall()
-        data = []
-        for url in all_urls:
-            temp = {}
-            last_check = get_last_check(url['id'])
-            temp['id'] = url['id']
-            temp['name'] = url['name']
-            temp['created_at'] = last_check['created_at']
-            temp['status_code'] = last_check['status_code']
-            data.append(temp)
-
-    return data
+    return all_urls
 
 
 def get_url_checks_by_id(id):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
         cursor.execute('SELECT * FROM url_checks '
-                       'WHERE url_id = (%s) '
+                       'WHERE url_id = (%s)'
                        'ORDER BY id DESC;',
                        [id])
         url_checks = cursor.fetchall()
     return url_checks
-
-
-def get_last_check(id):
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT created_at, status_code '
-                       'FROM url_checks '
-                       'WHERE url_id = (%s) '
-                       'ORDER BY id DESC '
-                       'LIMIT 1;',
-                       [id])
-        last_check = cursor.fetchone()
-    return last_check
