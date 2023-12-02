@@ -16,12 +16,16 @@
                   <tbody>
                   {% if urls %}
                       {% for url in urls %}
-                      <tr>
-                          <td>{{ url.id }}</td>
-                          <td><a href="{{ url_for('url_page', id=url.id) }}">{{ url.name }}</a></td>
-                          <td>{% if url.created_at %}{{ url.created_at.strftime('%Y-%m-%d') }}{% endif %}</td>
-                          <td>{% if url.status_code %}{{ url.status_code }}{% endif %}</td>
-                      </tr>
+                          {% for check in last_check %}
+                              {% if check.id == url.id %}
+                                  <tr>
+                                      <td>{{ url.id }}</td>
+                                      <td><a href="{{ url_for('url_page', id=url.id) }}">{{ url.name }}</a></td>
+                                      <td>{% if check.created_at %}{{ check.created_at.strftime('%Y-%m-%d') }}{% endif %}</td>
+                                      <td>{% if check.status_code %}{{ check.status_code }}{% endif %}</td>
+                                  </tr>
+                              {% endif %}
+                          {% endfor %}
                       {% endfor %}
                   {% endif %}
                   </tbody>
