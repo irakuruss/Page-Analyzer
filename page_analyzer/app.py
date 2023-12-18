@@ -77,14 +77,13 @@ def url_page(id):
 def add_check(id):
     url = get_url_by_id(id)
     try:
-        check = get_url_check(id, url['name'])
-        if check['status_code'] == 200:
-            add_url_check_to_db(check)
-            flash('Страница успешно проверена', 'success')
-        else:
-            flash('Произошла ошибка при проверке', 'danger')
+        requests.get(url['name']).raise_for_status()
     except requests.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
+    else:
+        check = get_url_check(id, url['name'])
+        add_url_check_to_db(check)
+        flash('Страница успешно проверена', 'success')
     return redirect(url_for('url_page', id=id))
 
 
