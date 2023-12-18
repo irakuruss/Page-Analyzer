@@ -17,7 +17,7 @@
                   {% if urls %}
                       {% for url in urls %}
                           {% for check in last_check %}
-                              {% if check.id == url.id %}
+                              {% if check.url_id == url.id %}
                                   <tr>
                                       <td>{{ url.id }}</td>
                                       <td><a href="{{ url_for('url_page', id=url.id) }}">{{ url.name }}</a></td>
