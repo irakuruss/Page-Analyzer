@@ -65,7 +65,8 @@ def get_url_by_name(name):
 def get_all_urls():
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=DictCursor) as cursor:
-        cursor.execute('SELECT * FROM urls;')
+        cursor.execute('SELECT * FROM urls '
+                       'ORDER BY id DESC;')
         all_urls = cursor.fetchall()
     return all_urls
 
