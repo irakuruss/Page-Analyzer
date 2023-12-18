@@ -86,6 +86,6 @@ def get_last_checks():
     with conn.cursor(cursor_factory=DictCursor) as cursor:
         cursor.execute('SELECT MAX(id) AS id, url_id, status_code, created_at '
                        'FROM url_checks '
-                       'GROUP BY url_id;')
+                       'GROUP BY url_id, status_code, created_at;')
         last_checks = cursor.fetchall()
     return last_checks
